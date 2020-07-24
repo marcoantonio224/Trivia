@@ -37,3 +37,12 @@ form {
   width: 80%;
   margin: auto;
 }
+
+.App-header > h1,h2 {
+  cursor:pointer;
+}
+
+
+.pagination-menu span, .play-category {
+  cursor: pointer;
+}
