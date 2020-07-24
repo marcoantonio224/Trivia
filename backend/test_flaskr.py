@@ -6,6 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flaskr import create_app
 from models import setup_db, Question, Category
 
+"""
+  Copy existing database from trivia database to create a testing database
+  for developing purposes.
+  Psql commands: CREATE DATABASE targetdb WITH TEMPLATE source;
+"""
 
 class TriviaTestCase(unittest.TestCase):
     """This class represents the trivia test case"""
@@ -43,8 +48,13 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['categories'])
         self.assertTrue(data['currentCategory'])
 
-    # def test_404_for_questions_not_found(self):
-    #     response = self.client().get('/questions')
+    def test_404_for_questions_not_found(self):
+        response = self.client().get('/questions?page=300')
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Questions not found')
 
 
 
