@@ -1,6 +1,6 @@
 .vscode
 __pycache__
-venv
+trivia_env
 
 # OS generated files #
 ######################
