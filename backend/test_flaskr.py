@@ -38,6 +38,10 @@ class TriviaTestCase(unittest.TestCase):
     TODO
     Write at least one test for each test for successful operation and for expected errors.
     """
+    #============== GET /questions?page=1 ===================
+    #========================================================
+
+    # Sucess
     def test_paginated_questions(self):
         response = self.client().get('/questions')
         data = json.loads(response.data)
@@ -48,6 +52,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['categories'])
         self.assertTrue(data['currentCategory'])
 
+    # Failure
     def test_404_for_questions_not_found(self):
         response = self.client().get('/questions?page=300')
         data = json.loads(response.data)
@@ -56,7 +61,32 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Questions not found')
 
+    #======================================================
+    #======================================================
 
+    #========= DELETE /questions/<int:book_id> ==============
+    #========================================================
+
+    # Success
+    def test_delete_question_success(self):
+        response = self.client().delete('/questions/9')
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    # Failure
+    def test_delete_question_failure(self):
+        response = self.client().delete('/questions/23233')
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Request unprocessable')
+
+
+    #======================================================
+    #======================================================
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

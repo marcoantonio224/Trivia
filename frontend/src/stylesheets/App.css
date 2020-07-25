@@ -38,11 +38,15 @@ form {
   margin: auto;
 }
 
-.App-header > h1,h2 {
+.App-header > h1, .App-header > h2 {
   cursor:pointer;
 }
 
 
 .pagination-menu span, .play-category {
+  cursor: pointer;
+}
+
+.categories-list > ul > li {
   cursor: pointer;
 }
