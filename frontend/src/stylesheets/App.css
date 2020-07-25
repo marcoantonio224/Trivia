@@ -43,7 +43,7 @@ form {
 }
 
 
-.pagination-menu span, .play-category {
+.pagination-menu span, .play-category, .show-answer{
   cursor: pointer;
 }
 
