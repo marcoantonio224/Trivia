@@ -133,21 +133,36 @@ def create_app(test_config=None):
     category = body.get('category', None)
     difficulty = body.get('difficulty', None)
     question = body.get('question', None)
+    # Search query
+    search = body.get('searchTerm', None)
     try:
-      # Create a new question instance
-      question = Question(question=question, answer=answer,category=category, difficulty=difficulty)
-      # Save question
-      question.insert()
-      # Grab all the questions
-      questions = Question.query.all()
-      current_questions = paginate_questions(request, questions)
+      # If a search request
+      if search:
+        # Search questions and get the questions where search query is found
+        results = Question.query.order_by(Question.id).filter(Question.question.ilike('%{}%'.format(search))).all()
+        current_questions = paginate_questions(request, results)
 
-      return jsonify({
-        'success': True,
-        'created': question.id,
-        'questions': current_questions,
-        'total_questions': len(current_questions)
-      })
+        return jsonify({
+          'success': True,
+          'questions': current_questions,
+          'total_questions': len(current_questions)
+        })
+      # If not a search request
+      else:
+        # Create a new question instance
+        question = Question(question=question, answer=answer,category=category, difficulty=difficulty)
+        # Save question
+        question.insert()
+        # Grab all the questions
+        questions = Question.query.all()
+        current_questions = paginate_questions(request, questions)
+
+        return jsonify({
+          'success': True,
+          'created': question.id,
+          'questions': current_questions,
+          'total_questions': len(current_questions)
+        })
 
     except:
       abort(422)
@@ -207,7 +222,7 @@ def create_app(test_config=None):
       'success': False,
       'error': 405,
       'message': 'Method not allowed'
-    })
+    }), 405
 
   # Request Unprocessable (422)
   @app.errorhandler(422)
@@ -217,6 +232,15 @@ def create_app(test_config=None):
       'error': 422,
       'message': 'Request unprocessable'
     }), 422
+
+  # Internal Server (500)
+  @app.errorhandler(500)
+  def server_error(error):
+    return jsonify({
+      'success': False,
+      'error': 500,
+      'message': 'Internal server error'
+    }), 500
 
   return app
 

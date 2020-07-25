@@ -14,6 +14,7 @@ class QuestionView extends Component {
       totalQuestions: 0,
       categories: {},
       currentCategory: null,
+      query:''
     }
   }
 
@@ -77,28 +78,34 @@ class QuestionView extends Component {
   }
 
   submitSearch = (searchTerm) => {
-    $.ajax({
-      url: `/questions`, //TODO: update request URL
-      type: "POST",
-      dataType: 'json',
-      contentType: 'application/json',
-      data: JSON.stringify({searchTerm: searchTerm}),
-      xhrFields: {
-        withCredentials: true
-      },
-      crossDomain: true,
-      success: (result) => {
-        this.setState({
-          questions: result.questions,
-          totalQuestions: result.total_questions,
-          currentCategory: result.current_category })
-        return;
-      },
-      error: (error) => {
-        alert('Unable to load questions. Please try your request again')
-        return;
-      }
-    })
+    if(searchTerm === ''){
+      this.getQuestions();
+    } else {
+      $.ajax({
+        url: `/questions`, //TODO: update request URL
+        type: "POST",
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({searchTerm: searchTerm}),
+        xhrFields: {
+          withCredentials: true
+        },
+        crossDomain: true,
+        success: (result) => {
+          this.setState({
+            questions: result.questions,
+            totalQuestions: result.total_questions,
+            currentCategory: result.current_category,
+            query: searchTerm
+          })
+          return;
+        },
+        error: (error) => {
+          alert('Unable to load questions. Please try your request again')
+          return;
+        }
+      })
+    }
   }
 
   questionAction = (id) => (action) => {
@@ -120,6 +127,8 @@ class QuestionView extends Component {
   }
 
   render() {
+    const {query} = this.state;
+    console.log(this.state)
     return (
       <div className="question-view">
         <div className="categories-list">
@@ -128,7 +137,6 @@ class QuestionView extends Component {
             {Object.keys(this.state.categories).map((id, ) => (
               <li key={id} onClick={() => {this.getByCategory(id)}}>
                 {this.state.categories[id]}
-                {console.log(this.state.categories[id])}
                 <img className="category" src={`${this.state.categories[id]}.svg`}/>
               </li>
             ))}
@@ -137,17 +145,19 @@ class QuestionView extends Component {
         </div>
         <div className="questions-list">
           <h2>Questions</h2>
-          {console.log(this.state.categories)}
-          {this.state.questions.map((q, ind) => (
-            <Question
-              key={q.id}
-              question={q.question}
-              answer={q.answer}
-              category={q.category}
-              difficulty={q.difficulty}
-              questionAction={this.questionAction(q.id)}
-            />
-          ))}
+          {(this.state.questions.length === 0) ?
+            <h2>There are no results for <i>{query}</i></h2>
+          :
+            this.state.questions.map((q, ind) => (
+              <Question
+                key={q.id}
+                question={q.question}
+                answer={q.answer}
+                category={q.category}
+                difficulty={q.difficulty}
+                questionAction={this.questionAction(q.id)}
+              />
+            ))}
           <div className="pagination-menu">
             {this.createPagination()}
           </div>
