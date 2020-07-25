@@ -124,6 +124,34 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.
   '''
+  # Save a new trivia question
+  @app.route('/questions', methods=['POST'])
+  def add_new_question():
+    # Get json body
+    body = request.get_json()
+    answer = body.get('answer', None)
+    category = body.get('category', None)
+    difficulty = body.get('difficulty', None)
+    question = body.get('question', None)
+    try:
+      # Create a new question instance
+      question = Question(question=question, answer=answer,category=category, difficulty=difficulty)
+      # Save question
+      question.insert()
+      # Grab all the questions
+      questions = Question.query.all()
+      current_questions = paginate_questions(request, questions)
+
+      return jsonify({
+        'success': True,
+        'created': question.id,
+        'questions': current_questions,
+        'total_questions': len(current_questions)
+      })
+
+    except:
+      abort(422)
+
 
   '''
   @TODO:
@@ -163,6 +191,7 @@ def create_app(test_config=None):
   Create error handlers for all expected errors
   including 404 and 422.
   '''
+  # Not Found Error (404)
   @app.errorhandler(404)
   def not_found(error):
     return jsonify({
@@ -171,6 +200,16 @@ def create_app(test_config=None):
       'message': 'Questions not found'
     }), 404
 
+  # Method Not Allowed (405)
+  @app.errorhandler(405)
+  def method_not_allowed(error):
+    return jsonify({
+      'success': False,
+      'error': 405,
+      'message': 'Method not allowed'
+    })
+
+  # Request Unprocessable (422)
   @app.errorhandler(422)
   def unprocessable_request(error):
     return jsonify({

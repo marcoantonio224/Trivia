@@ -23,6 +23,20 @@ class TriviaTestCase(unittest.TestCase):
         self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        # Test new question success
+        self.new_question_success= {
+            'question':'In what state was Barack Obama born in?',
+            'answer':'Hawaii',
+            'category':'History',
+            'difficulty': 2
+        }
+        # Test new question failure
+        self.new_question_fail = {
+            'quote':'Come with me if you want to live',
+            'person': 'Arnold SwarSchwarzenegger',
+            'movie':'Terminator'
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -69,7 +83,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # Success
     def test_delete_question_success(self):
-        response = self.client().delete('/questions/9')
+        response = self.client().delete('/questions/24')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -84,6 +98,31 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Request unprocessable')
 
+
+    #======================================================
+    #======================================================
+
+    #=============== POST /questions ========================
+    #========================================================
+    # Success
+    def test_new_question_success(self):
+        response = self.client().post('/questions', json=self.new_question_success)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['created'])
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+
+    # Failure
+    def test_new_question_failure(self):
+        response = self.client().post('/questions', json=self.new_question_fail)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'], 'Request unprocessable')
 
     #======================================================
     #======================================================
