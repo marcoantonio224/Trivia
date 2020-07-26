@@ -37,6 +37,16 @@ class TriviaTestCase(unittest.TestCase):
             'movie':'Terminator'
         }
 
+        # Test search query success
+        self.search_query = {
+            "searchTerm": "president"
+        }
+
+        # Test search query failure
+        self.search_query_failure = {
+            "Unprocessable": "Not required"
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -83,7 +93,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # Success
     def test_delete_question_success(self):
-        response = self.client().delete('/questions/24')
+        response = self.client().delete('/questions/28')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -104,6 +114,7 @@ class TriviaTestCase(unittest.TestCase):
 
     #=============== POST /questions ========================
     #========================================================
+
     # Success
     def test_new_question_success(self):
         response = self.client().post('/questions', json=self.new_question_success)
@@ -118,6 +129,31 @@ class TriviaTestCase(unittest.TestCase):
     # Failure
     def test_new_question_failure(self):
         response = self.client().post('/questions', json=self.new_question_fail)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'], 'Request unprocessable')
+
+    #======================================================
+    #======================================================
+
+    #=============== SEARCH POST /questions ========================
+    #========================================================
+
+    # Success
+    def test_search_query_success(self):
+        response = self.client().post('/questions', json=self.search_query)
+        data = json.loads(response.data)
+        print(data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+
+    # Failure
+    def test_search_query_failure(self):
+        response = self.client().post('/questions', json=self.search_query_failure)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 422)
