@@ -163,6 +163,32 @@ class TriviaTestCase(unittest.TestCase):
     #======================================================
     #======================================================
 
+    #========= GET /category/<category>/questions ===========
+    #========================================================
+
+    # Success
+    def test_get_category_questions_success(self):
+        # Test a category in the database. In this case it's Science
+        response = self.client().get('/categories/Science/questions')
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+
+    # Failure
+    def test_get_category_questions_failure(self):
+        response = self.client().get('/category/Business/questions')
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'], 'Not found')
+
+    #======================================================
+    #======================================================
+
 # Make the tests conveniently executable
 if __name__ == "__main__":
     unittest.main()

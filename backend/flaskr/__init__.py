@@ -150,7 +150,6 @@ def create_app(test_config=None):
     try:
       # If a search request
       if search:
-        print('SEARCH **********', search)
         # Search questions and get the questions where search query is found
         results = Question.query.order_by(Question.id).filter(Question.question.ilike('%{}%'.format('president'))).all()
         current_questions = paginate_questions(request, results)
@@ -168,6 +167,7 @@ def create_app(test_config=None):
         question.insert()
         # Grab all the questions
         questions = Question.query.all()
+        # Paginate questions
         current_questions = paginate_questions(request, questions)
 
         return jsonify({
@@ -188,7 +188,27 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that
   category to be shown.
   '''
+  # Get questions based on category /categories/Entertainment/questions
+  @app.route('/categories/<category>/questions')
+  def get_category_questions(category):
+    # Get questions according to categories provided in the url
+    questions = Question.query.filter(Question.category == category).all()
 
+    if questions != []:
+
+      # Paginate the questions by helper function
+      current_questions = paginate_questions(request, questions)
+      # Grab all the categories from database and serialize them
+      questions_serialized = [question.format() for question in questions]
+
+      return jsonify({
+        'success': True,
+        'questions': questions_serialized,
+        'total_questions': len(questions_serialized)
+      })
+
+    else:
+      abort(404)
 
   '''
   @TODO:
