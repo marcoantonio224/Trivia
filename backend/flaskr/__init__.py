@@ -151,7 +151,7 @@ def create_app(test_config=None):
       # If a search request
       if search:
         # Search questions and get the questions where search query is found
-        results = Question.query.order_by(Question.id).filter(Question.question.ilike('%{}%'.format('president'))).all()
+        results = Question.query.order_by(Question.id).filter(Question.question.ilike('%{}%'.format(search))).all()
         current_questions = paginate_questions(request, results)
 
         return jsonify({
