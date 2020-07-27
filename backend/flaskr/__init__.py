@@ -85,6 +85,29 @@ def create_app(test_config=None):
       'currentCategory': 'not provided'
     })
 
+  # Update question rating
+  @app.route('/questions/<int:question_id>', methods=['PATCH'])
+  def update_question_rating(question_id):
+    try:
+      body = request.get_json()
+      # Get question according to id
+      question = Question.query.filter(Question.id == question_id).one_or_none()
+
+      if question is None:
+        abort(404) # Question is not found
+      print(body)
+      # Else, proceed with the update
+      if 'rating' in body:
+        question.rating = int(body.get('rating'))
+        question.update()
+
+      return jsonify({
+        "success": True,
+        "id": question_id
+      })
+
+    except:
+      abort(400)
 
   '''
   @TODO:
@@ -225,6 +248,7 @@ def create_app(test_config=None):
   def generate_random_question(category, previous_questions):
     # Get the questions out of category
     questions = Question.query.filter(Question.category == category['type']).all()
+
     # If questions are empty, then initiate the "all" category (all questions)
     if questions == []:
       questions = Question.query.all()

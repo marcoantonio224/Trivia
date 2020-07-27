@@ -50,3 +50,18 @@ form {
 .categories-list > ul > li {
   cursor: pointer;
 }
+
+.rating{
+  width: 12%;
+}
+
+.star{
+  /* margin-right: 4%; */
+}
+
+.star-highlighted:before {
+  content: "\2605";
+  position: absolute;
+  /* margin-right: 4%; */
+  color:#ffe81b;
+}

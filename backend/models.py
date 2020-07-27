@@ -53,6 +53,7 @@ class Question(db.Model):
   question = Column(String, nullable=False)
   answer = Column(String, nullable=False)
   difficulty = Column(Integer, nullable=False)
+  rating = Column(Integer, nullable=False, default=0)
   category = Column(String, db.ForeignKey('categories.type'))
 
 

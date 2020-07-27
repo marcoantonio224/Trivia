@@ -151,6 +151,7 @@ class QuestionView extends Component {
             this.state.questions.map((q, ind) => (
               <Question
                 key={q.id}
+                id={q.id}
                 question={q.question}
                 answer={q.answer}
                 category={q.category}
