@@ -49,8 +49,17 @@ class TriviaTestCase(unittest.TestCase):
 
         # Test play quiz with science category
         self.play_category = {
-            "quiz_category": "Science",
+            "quiz_category": {
+                "type": "Science",
+                "id": 0
+            },
             "previous_questions": []
+        }
+
+        # Test play quiz with category failure
+        self.play_category_failure = {
+            "quiz_category": {"type": "fail"},
+            "previous_question": []
         }
 
         # binds the app to the current context
@@ -99,7 +108,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # Success
     def test_delete_question_success(self):
-        response = self.client().delete('/questions/28')
+        response = self.client().delete('/questions/92')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -122,15 +131,15 @@ class TriviaTestCase(unittest.TestCase):
     #========================================================
 
     # Success
-    # def test_new_question_success(self):
-    #     response = self.client().post('/questions', json=self.new_question_success)
-    #     data = json.loads(response.data)
+    def test_new_question_success(self):
+        response = self.client().post('/questions', json=self.new_question_success)
+        data = json.loads(response.data)
 
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['success'], True)
-    #     self.assertTrue(data['created'])
-    #     self.assertTrue(data['questions'])
-    #     self.assertTrue(data['total_questions'])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['created'])
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
 
     # Failure
     def test_new_question_failure(self):
@@ -197,7 +206,6 @@ class TriviaTestCase(unittest.TestCase):
 
     #========= POST /quizzes ===========
     #========================================================
-    # DONT FORGET TO UNCOMMENT POST NEW QUESTION AND FAILURE OF QUIZ GAME TEST
     # Success
     def test_play_quiz_success(self):
         # Test a category in the database. In this case it's Science
@@ -206,17 +214,17 @@ class TriviaTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertTrue(data['questions'])
-        self.assertTrue(data['total_questions'])
+        self.assertTrue(data['question'])
+        self.assertTrue(data['questions_per_play'])
 
     # Failure
-    # def test_play_quiz_failure(self):
-    #     response = self.client().post('/quizzes')
-    #     data = json.loads(response.data)
+    def test_play_quiz_failure(self):
+        response = self.client().post('/quizzes', json=self.play_category_failure)
+        data = json.loads(response.data)
 
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(data['success'], False)
-    #     self.assertTrue(data['message'], 'Not found')
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'], 'Request unprocessable')
 
     #======================================================
     #======================================================
