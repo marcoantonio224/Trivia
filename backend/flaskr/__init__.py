@@ -221,6 +221,51 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not.
   '''
+  # A helper function to genereate a random question for the user to answer
+  def generate_random_question(category, previous_questions):
+    # Get the questions out of category
+    questions = Question.query.filter(Question.category == category['type']).all()
+    # If questions are empty, then initiate the "all" category (all questions)
+    if questions == []:
+      questions = Question.query.all()
+
+    # Get length of questions
+    len_of_questions = len(questions)
+    # Genereate a random number
+    random_number = random.randint(0, len_of_questions) - 1
+    # Generate random question
+    question = questions[random_number].format()
+    # Check the question's id to see if they have already been asked
+    # in a previous question
+    if question['id'] in previous_questions:
+      # Check to see if all the questions are in the previous_array
+      if len(previous_questions) == len(questions):
+        return { "question":'done', "questions_per_play": len_of_questions }
+      else:
+        # Recursive function
+        return generate_random_question(category, previous_questions)
+    else:
+      return { "question":question, "questions_per_play": len_of_questions }
+
+  # Play the trivia game
+  @app.route('/quizzes', methods=['POST'])
+  def play_quiz():
+    try:
+      # Get json body
+      body = request.get_json()
+      category = body.get('quiz_category', None)
+      previous_questions = body.get('previous_questions', None)
+      # Generate random question
+      question_dictionary = generate_random_question(category, previous_questions)
+
+      return jsonify({
+        'success': True,
+        'question': question_dictionary['question'],
+        'questions_per_play': question_dictionary['questions_per_play']
+      })
+
+    except:
+      abort(422)
 
   '''
   @TODO:

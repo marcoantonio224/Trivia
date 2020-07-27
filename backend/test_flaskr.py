@@ -47,6 +47,12 @@ class TriviaTestCase(unittest.TestCase):
             "Unprocessable": "Not required"
         }
 
+        # Test play quiz with science category
+        self.play_category = {
+            "quiz_category": "Science",
+            "previous_questions": []
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -116,15 +122,15 @@ class TriviaTestCase(unittest.TestCase):
     #========================================================
 
     # Success
-    def test_new_question_success(self):
-        response = self.client().post('/questions', json=self.new_question_success)
-        data = json.loads(response.data)
+    # def test_new_question_success(self):
+    #     response = self.client().post('/questions', json=self.new_question_success)
+    #     data = json.loads(response.data)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['success'], True)
-        self.assertTrue(data['created'])
-        self.assertTrue(data['questions'])
-        self.assertTrue(data['total_questions'])
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertTrue(data['created'])
+    #     self.assertTrue(data['questions'])
+    #     self.assertTrue(data['total_questions'])
 
     # Failure
     def test_new_question_failure(self):
@@ -185,6 +191,32 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'], 'Not found')
+
+    #======================================================
+    #======================================================
+
+    #========= POST /quizzes ===========
+    #========================================================
+    # DONT FORGET TO UNCOMMENT POST NEW QUESTION AND FAILURE OF QUIZ GAME TEST
+    # Success
+    def test_play_quiz_success(self):
+        # Test a category in the database. In this case it's Science
+        response = self.client().post('/quizzes', json=self.play_category)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+
+    # Failure
+    # def test_play_quiz_failure(self):
+    #     response = self.client().post('/quizzes')
+    #     data = json.loads(response.data)
+
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertEqual(data['success'], False)
+    #     self.assertTrue(data['message'], 'Not found')
 
     #======================================================
     #======================================================
