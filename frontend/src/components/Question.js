@@ -41,6 +41,11 @@ class Question extends Component {
     for (let star of stars) {
       star.className = 'star';
     }
+    // Highlight stars accoring to ratings
+    for(let i = 0; i < this.state.rating; i++) {
+      console.log(i)
+      stars[i].className = 'star-highlighted';
+    }
   }
 
   updateQuestionRating() {
@@ -57,8 +62,8 @@ class Question extends Component {
       crossDomain: true,
       success: (result) => {
         this.setState({
-          rating:0,
-          questionId:''
+          // rating:res,
+          // questionId:''
         })
       }
     });
@@ -75,10 +80,16 @@ class Question extends Component {
     setTimeout(()=>this.updateQuestionRating(), 100)
   }
 
+  starCheck(value, rating){
+    if(value <= rating) {
+      return 'star-highlighted';
+    }
+    return 'star';
+  }
 
   render() {
-    const { id, question, answer, category, difficulty } = this.props;
-    console.log(this.state)
+    const { id, question, answer, category, difficulty, rating} = this.props;
+
     return (
       <div className="Question-holder">
         <div className="Question">{question}</div>
@@ -90,29 +101,30 @@ class Question extends Component {
         </div>
         <div>
           Rating:
-          <div id={id} className="rating" ref={'rating'} onMouseLeave={(e)=>this.removeHighlightStars(e)}>
+          <div id={id} className="rating" ref={'rating'} onMouseLeave={(e)=> this.removeHighlightStars(e, rating)}>
               <span
-                className="star"
+                className= {this.starCheck(1, rating)}
                 onMouseEnter={(e)=> this.highlightStar(e, 1)}
                 onMouseLeave={(e)=> this.removeHighlightStar(e)}
-                onClick={(e) => this.rateStar(e, 1)}>&#9734;</span>
+                onClick={(e) => this.rateStar(e, 1)}> &#9734;
+              </span>
               <span
-                className="star"
+                className= {this.starCheck(2, rating)}
                 onMouseEnter={(e)=> this.highlightStar(e, 2)}
                 onMouseLeave={(e)=> this.removeHighlightStar(e)}
                 onClick={(e) => this.rateStar(e, 2)}>&#9734;</span>
               <span
-                className="star"
+                className= {this.starCheck(3, rating)}
                 onMouseEnter={(e)=> this.highlightStar(e, 3)}
                 onMouseLeave={(e)=> this.removeHighlightStar(e)}
                 onClick={(e) => this.rateStar(e, 3)}>&#9734;</span>
               <span
-                className="star"
+                className= {this.starCheck(4, rating)}
                 onMouseEnter={(e)=> this.highlightStar(e, 4)}
                 onMouseLeave={(e)=> this.removeHighlightStar(e)}
                 onClick={(e) => this.rateStar(e, 4)}>&#9734;</span>
               <span
-                className="star"
+                className= {this.starCheck(5, rating)}
                 onMouseEnter={(e)=> this.highlightStar(e, 5)}
                 onMouseLeave={(e)=> this.removeHighlightStar(e)}
                 onClick={(e) => this.rateStar(e, 5)}>&#9734;</span>

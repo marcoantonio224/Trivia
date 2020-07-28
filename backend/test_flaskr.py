@@ -62,6 +62,12 @@ class TriviaTestCase(unittest.TestCase):
             "previous_question": []
         }
 
+        # Test rating question update success
+        self.rating = {
+            "id": 3,
+            "rating": 3
+        }
+
         # binds the app to the current context
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -108,7 +114,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # Success
     def test_delete_question_success(self):
-        response = self.client().delete('/questions/92')
+        response = self.client().delete('/questions/49')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -225,6 +231,30 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'], 'Request unprocessable')
+
+    #======================================================
+    #======================================================
+
+    #========= PATCH /questions/<int:question_id> ===========
+    #========================================================
+    # Success
+    def test_question_update_rating_success(self):
+        # Test a category in the database. In this case it's Science
+        response = self.client().patch('/questions/55', json=self.rating)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['id'], 55)
+
+    # Failure
+    def test_question_update_rating_failure(self):
+        response = self.client().patch('/questions/5e5', json=self.rating)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'], 'Not found')
 
     #======================================================
     #======================================================

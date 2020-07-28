@@ -80,6 +80,7 @@ class Question(db.Model):
       'question': self.question,
       'answer': self.answer,
       'category': self.category,
-      'difficulty': self.difficulty
+      'difficulty': self.difficulty,
+      'rating': self.rating
     }
 

@@ -94,8 +94,9 @@ def create_app(test_config=None):
       question = Question.query.filter(Question.id == question_id).one_or_none()
 
       if question is None:
+        print("NOT FOUND")
         abort(404) # Question is not found
-      print(body)
+
       # Else, proceed with the update
       if 'rating' in body:
         question.rating = int(body.get('rating'))
