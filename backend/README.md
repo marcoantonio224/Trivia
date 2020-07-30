@@ -1,100 +1,207 @@
-# Full Stack Trivia API Backend
+# FULL STACK TRIVIA API BACKEND
 
-## Getting Started
+## DESCRIPTION
+  Welcome to Trivia! This game gives the user trivia questions and they have the option to get, delete, rate, and add questions to the database system (PostgreSQL). It allows them to choose different categories in questions, and gives them the ability to study and answer the quesions to gain points.
 
-### Installing Dependencies
+## CODING STYLE
+  This project was configured by react (frontend) and RESTful API patterns with Flask development. It uses the format of MVC, where the models are the database schema and routes are the controllers between the server and client.
 
-#### Python 3.7
+## TECHNOLOGIES
+  Frontend: [JavaScript], [Jquery], [React]
+  Backend: [Python], [Flask], [SQLAlchemy], [PostgreSQL]
 
-Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+## GETTING STARTED:
 
-#### Virtual Enviornment
+  ### CREATE LOCAL ENVIRONMENT
+  If not done so, please install virtual environment. This keeps your dependencies for each project separate and organized.
+  `pip install virtualenv`
 
-We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+  Then create the environment:
+  1. virtualenv trivia_env
+  2. cd trivia_env
+  3. source bin/activate
+  To **deactivate** environment, type: `deactivate`
 
-#### PIP Dependencies
+  ### INSTALL PREREQUISITES
+    Please install first all the modules for the project to get it started if you haven't done so already. Make sure you are in the parent directory of requirements.txt.
+    Command:
+    `pip install -r requirements.txt`
 
-Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
+  ### DATABASE ACCESS
+    In order to access the database, you must have
+    Postgres up and running. From the backend folder, in the command line type:
+    `psql triva`
 
-```bash
-pip install -r requirements.txt
-```
+  ### SERVER SIDE DEVELOPMENT
+    To run a Flask application, make sure you set up the proper environmental variables within the command line and run the application for the backend.
 
-This will install all of the required packages we selected within the `requirements.txt` file.
+  ### Commands:
+    `export FLASK_APP=flaskr`  (Sets the application)
+    `export FLASK_ENV=development` (Sets the project in development mode)
+    `flask run` (Runs the application)
 
-##### Key Dependencies
+  ### APPLICATION PROGRAMMING INTERFACE
+      Here are the endpoints of our API application.
+      Base URL: [http://127.0.0.1:3000/questions]
+      API Keys: This version of the application does not require authentication or API Keys.
 
-- [Flask](http://flask.pocoo.org/)  is a lightweight backend microservices framework. Flask is required to handle requests and responses.
-
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py. 
-
-- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
-
-## Database Setup
-With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
-```bash
-psql trivia < trivia.psql
-```
-
-## Running the server
-
-From within the `backend` directory first ensure you are working using your created virtual environment.
-
-To run the server, execute:
-
-```bash
-export FLASK_APP=flaskr
-export FLASK_ENV=development
-flask run
-```
-
-Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
-
-Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
-
-## Tasks
-
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
-```
+## API ENDPOINTS
+  GET `/questions`
+  - Return a list of categories in a paginated format. They are a total of 10.
+    INPUT: `curl http://127.0.0.1:3000/questions`
+    OUTPUT:
+      {
+        "categories": [
+          "Science",
+          "Art",
+          "Geography",
+          "History",
+          "Entertainment",
+          "Sports"
+        ],
+        "currentCategory": "not provided",
+        "questions": [
+          {
+            "answer": "Oxygen",
+            "category": "Science",
+            "difficulty": 4,
+            "id": 24,
+            "question": "What element did Joseph Priestley discover in 1774?",
+            "rating": 4
+          },
+          ( ......... 9 More Questions )
+        ],
+        "success": true,
+        "total_questions": 13
+      }
 
 
-## Testing
-To run the tests, run
-```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
-```
+  GET  `/categories`
+  - Return a list of categories.
+    INPUT: `curl http://127.0.0.1:3000/categories`
+    OUTPUT:
+      {
+        "categories": [
+          "Science",
+          "Art",
+          "Geography",
+          "History",
+          "Entertainment",
+          "Sports"
+        ],
+        "success": true
+      }
+
+  PATCH `/questions/<int:question_id>`
+  - Update a question by inserting a rating
+    INPUT: `curl http://127.0.0.1:3000/questions/25 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'`
+    {
+      "id": 25,
+      "success": true
+    }
+
+  GET `/questions`
+  - Return a list of categories.
+    INPUT: `curl http://127.0.0.1:3000/categories`
+    OUTPUT:
+      {
+        "categories": [
+          "Science",
+          "Art",
+          "Geography",
+          "History",
+          "Entertainment",
+          "Sports"
+        ],
+        "success": true
+      }
+
+  DELETE `/questions/<int:question_id>`
+  - Update a question by inserting a rating
+    INPUT: `curl http://127.0.0.1:3000/questions/25 -X DELETE -H "Content-Type: application/json" -d '{"rating":"1"}'`
+    {
+      "deleted": 25,
+      "success": true
+    }
+
+  POST `/questions`
+  - Update a question by inserting a rating
+    INPUT: `curl http://127.0.0.1:3000/questions/25 -X POST -H "Content-Type: application/json" -d '{"question":"In what state was Barack Obama born in?", "answer":"Hawaii", "category":"History", "difficulty": 2}'`
+    OUTPUT:
+    {
+      "created": 51,
+      "questions": [
+        {
+          "answer": "Hawaii",
+          "category": "History",
+          "difficulty": 2,
+          "id": 51,
+          "question": "In what state was Barack Obama born in?",
+          "rating": 0
+        },
+        (... 9 other questions)
+      ],
+      "success": true,
+      "total_questions": 10
+    }
+
+
+  GET `/categories/<category>/questions`
+  - Grab questions according to category
+    INPUT: `curl http://127.0.0.1:3000/categories/Science/questions`
+    OUTPUT:
+    {
+      "questions": [
+        {
+          "answer": "Oxygen",
+          "category": "Science",
+          "difficulty": 4,
+          "id": 24,
+          "question": "What element did Joseph Priestley discover in 1774?",
+          "rating": 4
+        },
+        {
+          "answer": "Copper and Tin",
+          "category": "Science",
+          "difficulty": 3,
+          "id": 26,
+          "question": "Bronze is an alloy consisting primarily of what two elements?",
+          "rating": 1
+        }
+      ],
+      "success": true,
+      "total_questions": 2
+  }
+
+  POST `/quizzes`
+  - Call Quiz to start and play trivia.
+    INPUT: `curl http://127.0.0.1:3000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [], "quiz_category": {"type": "Art", "id": "1"}}'`
+  OUTPUT:
+  {
+    "question": {
+      "answer": "Michelangelo",
+      "category": "Art",
+      "difficulty": 3,
+      "id": 29,
+      "question": "Who painted the Sistine Chapel's ceiling?",
+      "rating": 0
+    },
+    "questions_per_play": 3,
+    "success": true
+}
+
+## TEST API
+  How to run unit test in python flask on command line.
+  INPUT: `pyhton test_flaskr.py`
+
+## DEPLOYMENT
+  `N/A`
+
+## AUTHORS
+  - Marco A. Canchola (Full Stack Developer)
+  - Abe Feinberg (Udacity Instructor/Full Stack Developer)
+
+## ACKNOWLEDGEMENTS
+  - Udacity
+  - Python Docs (https://docs.python.org/3/tutorial/venv.html)
+  - https://www.postgresqltutorial.com/postgresql-alter-table/

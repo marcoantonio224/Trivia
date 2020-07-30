@@ -1,9 +1,9 @@
 import os
+import random
+
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import random
-
 from models import setup_db, Question, Category
 
 
@@ -94,7 +94,6 @@ def create_app(test_config=None):
       question = Question.query.filter(Question.id == question_id).one_or_none()
 
       if question is None:
-        print("NOT FOUND")
         abort(404) # Question is not found
 
       # Else, proceed with the update
@@ -270,7 +269,7 @@ def create_app(test_config=None):
         # Recursive function
         return generate_random_question(category, previous_questions)
     else:
-      return { "question":question, "questions_per_play": len_of_questions }
+      return {"question":question, "questions_per_play": len_of_questions}
 
   # Play the trivia game
   @app.route('/quizzes', methods=['POST'])
