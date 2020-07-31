@@ -10,7 +10,7 @@ class FormView extends Component {
       question: "",
       answer: "",
       difficulty: 1,
-      category: 1,
+      category: "Science", // By Default
       categories: {}
     }
   }

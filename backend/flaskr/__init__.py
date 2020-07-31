@@ -33,7 +33,10 @@ def create_app(test_config=None):
   @app.route('/categories')
   def get_categories():
     categories = Category.query.all()
-    categories_serialized = [category.format()['type'] for category in categories]
+
+    categories_serialized = []
+    for category in categories:
+      categories_serialized.append(category.format()['type'])
 
     return jsonify({
       'success': True,
@@ -46,9 +49,12 @@ def create_app(test_config=None):
     page = request.args.get('page', 1, type=int)
     start = (page - 1) * QUESTIONS_PER_PAGE
     end = start + QUESTIONS_PER_PAGE
-    questions = [question.format() for question in questions]
-    current_questions = questions[start:end]
-    return current_questions
+
+    selected_questions = []
+    for question in questions:
+      selected_questions.append(question.format())
+
+    return selected_questions[start:end]
 
   '''
   @TODO:
@@ -71,7 +77,10 @@ def create_app(test_config=None):
     current_questions = paginate_questions(request, questions)
     # Grab all the categories from database and serialize them
     categories = Category.query.order_by(Category.id).all()
-    categories_serialized = [category.format()['type'] for category in categories]
+
+    categories_serialized = []
+    for category in categories:
+      categories_serialized.append(category.format()['type'])
 
     if len(current_questions) == 0:
       # Questions not found
@@ -97,9 +106,12 @@ def create_app(test_config=None):
         abort(404) # Question is not found
 
       # Else, proceed with the update
-      if 'rating' in body:
+      if body['rating']:
         question.rating = int(body.get('rating'))
         question.update()
+
+      else:
+        abort(422) #Bad Request
 
       return jsonify({
         "success": True,
@@ -175,6 +187,7 @@ def create_app(test_config=None):
       if search:
         # Search questions and get the questions where search query is found
         results = Question.query.order_by(Question.id).filter(Question.question.ilike('%{}%'.format(search))).all()
+        # Paginate those questions
         current_questions = paginate_questions(request, results)
 
         return jsonify({
@@ -214,20 +227,20 @@ def create_app(test_config=None):
   # Get questions based on category /categories/Entertainment/questions
   @app.route('/categories/<category>/questions')
   def get_category_questions(category):
+    print(category)
     # Get questions according to categories provided in the url
     questions = Question.query.filter(Question.category == category).all()
 
     if questions != []:
 
+      # Grab all the categories from database and serialize them
       # Paginate the questions by helper function
       current_questions = paginate_questions(request, questions)
-      # Grab all the categories from database and serialize them
-      questions_serialized = [question.format() for question in questions]
 
       return jsonify({
         'success': True,
-        'questions': questions_serialized,
-        'total_questions': len(questions_serialized)
+        'questions': current_questions,
+        'total_questions': len(current_questions)
       })
 
     else:
@@ -296,6 +309,15 @@ def create_app(test_config=None):
   Create error handlers for all expected errors
   including 404 and 422.
   '''
+  # Bad Request Error (400)
+  @app.errorhandler(400)
+  def not_found(error):
+    return jsonify({
+      'success': False,
+      'error': 400,
+      'message': 'Bad Request'
+    }), 400
+
   # Not Found Error (404)
   @app.errorhandler(404)
   def not_found(error):

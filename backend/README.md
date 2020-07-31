@@ -117,15 +117,15 @@
       }
 
   DELETE `/questions/<int:question_id>`
-  - Update a question by inserting a rating
-    INPUT: `curl http://127.0.0.1:3000/questions/25 -X DELETE -H "Content-Type: application/json" -d '{"rating":"1"}'`
+  - Delete a question by id
+    INPUT: `curl http://127.0.0.1:3000/questions/25 -X DELETE`
     {
       "deleted": 25,
       "success": true
     }
 
   POST `/questions`
-  - Update a question by inserting a rating
+  - Add a question
     INPUT: `curl http://127.0.0.1:3000/questions/25 -X POST -H "Content-Type: application/json" -d '{"question":"In what state was Barack Obama born in?", "answer":"Hawaii", "category":"History", "difficulty": 2}'`
     OUTPUT:
     {
