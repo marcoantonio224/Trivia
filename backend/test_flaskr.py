@@ -95,7 +95,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
-        self.assertTrue(data['currentCategory'])
+        self.assertFalse(data['current_category'])
 
     # Failure
     def test_404_for_questions_not_found(self):
@@ -190,13 +190,15 @@ class TriviaTestCase(unittest.TestCase):
     # Success
     def test_get_category_questions_success(self):
         # Test a category in the database. In this case it's Science
-        response = self.client().get('/categories/Science/questions')
+        response = self.client().get('/categories/0/questions')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['questions'])
         self.assertTrue(data['total_questions'])
+        self.assertTrue(data['categories'])
+        self.assertTrue(data['current_category'])
 
     # Failure
     def test_get_category_questions_failure(self):

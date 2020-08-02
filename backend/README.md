@@ -100,7 +100,7 @@
       "success": true
     }
 
-  GET `/questions`
+  GET `/categories`
   - Return a list of categories.
     INPUT: `curl http://127.0.0.1:3000/categories`
     OUTPUT:

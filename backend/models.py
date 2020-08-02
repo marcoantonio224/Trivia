@@ -2,6 +2,7 @@ import os
 from sqlalchemy import Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from sqlalchemy.orm import validates
 
 import json
 
@@ -55,6 +56,12 @@ class Question(db.Model):
   difficulty = Column(Integer, nullable=False)
   rating = Column(Integer, nullable=False, default=0)
   category = Column(String, db.ForeignKey('categories.type'))
+
+  @validates('question','answer')
+  def validate_question(self, keys, values):
+    if values == '':
+      raise AssertionError('Cannot contain empty fields')
+    return values
 
 
   def __init__(self, question, answer, category, difficulty):

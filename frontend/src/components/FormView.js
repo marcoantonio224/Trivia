@@ -30,9 +30,11 @@ class FormView extends Component {
     })
   }
 
-
+  // FIX THIS BUGGG
   submitQuestion = (event) => {
     event.preventDefault();
+    // Prevent from the event's regular features, such as onChange events.
+    console.log(this.state)
     $.ajax({
       url: '/questions', //TODO: update request URL
       type: "POST",
@@ -49,18 +51,30 @@ class FormView extends Component {
       },
       crossDomain: true,
       success: (result) => {
+        const {question, answer} = this.refs;
+        // Refresh element
         document.getElementById("add-question-form").reset();
+        question.value = '';
+        answer.value = '';
+        // Refresh state management
+        this.setState({
+          question: "",
+          answer: "",
+          difficulty: 1,
+          category: "Science" // By Default
+        });
+
         return;
       },
       error: (error) => {
-        alert('Unable to add question. Please try your request again')
+        alert('Unable to add question. There can be no empty fields.');
         return;
       }
     })
   }
 
   handleChange = (event) => {
-    this.setState({[event.target.name]: event.target.value})
+    this.setState({[event.target.name]: event.target.value});
   }
 
   render() {
@@ -70,11 +84,11 @@ class FormView extends Component {
         <form className="form-view" id="add-question-form" onSubmit={this.submitQuestion}>
           <label>
             Question
-            <input type="text" name="question" onChange={this.handleChange}/>
+            <input type="text" ref='question' name="question" onChange={this.handleChange} />
           </label>
           <label>
             Answer
-            <input type="text" name="answer" onChange={this.handleChange}/>
+            <input type="text"ref='answer' name="answer" onChange={this.handleChange}/>
           </label>
           <label>
             Difficulty

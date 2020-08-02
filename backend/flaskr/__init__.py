@@ -91,7 +91,7 @@ def create_app(test_config=None):
       'questions': current_questions,
       'total_questions': len(Question.query.all()),
       'categories': categories_serialized,
-      'currentCategory': 'not provided'
+      'current_category': None
     })
 
   # Update question rating
@@ -193,7 +193,7 @@ def create_app(test_config=None):
         return jsonify({
           'success': True,
           'questions': current_questions,
-          'total_questions': len(current_questions)
+          'total_questions': len(results)
         })
       # If not a search request
       else:
@@ -210,7 +210,7 @@ def create_app(test_config=None):
           'success': True,
           'created': question.id,
           'questions': current_questions,
-          'total_questions': len(current_questions)
+          'total_questions': len(questions)
         })
 
     except:
@@ -227,24 +227,41 @@ def create_app(test_config=None):
   # Get questions based on category /categories/Entertainment/questions
   @app.route('/categories/<category>/questions')
   def get_category_questions(category):
-    print(category)
-    # Get questions according to categories provided in the url
-    questions = Question.query.filter(Question.category == category).all()
+    try:
+      # Get questions according to categories provided in the url
+      categories = Category.query.order_by(Category.id).all()
 
-    if questions != []:
+      category_int = int(category)
 
-      # Grab all the categories from database and serialize them
-      # Paginate the questions by helper function
-      current_questions = paginate_questions(request, questions)
+      if type(category_int) is not int:
+        abort(422)
+      # Grab the category according to index
+      category_object = categories[category_int]
+      #Grab all questions according to category and keep order by id
+      questions = Question.query.filter(Question.category == category_object.type).order_by(Question.id).all()
+      # If questions are not empty
+      if questions != []:
+        # Grab all the categories from database and serialize them
+        # Paginate the questions by helper function
+        current_questions = paginate_questions(request, questions)
+        # Serialize categories
+        categories_serialized = []
+        for topic in categories:
+          categories_serialized.append(topic.format()['type'])
 
-      return jsonify({
-        'success': True,
-        'questions': current_questions,
-        'total_questions': len(current_questions)
-      })
+        return jsonify({
+          'success': True,
+          'questions': current_questions,
+          'total_questions': len(questions),
+          'current_category': category,
+          'categories': categories_serialized,
+        })
 
-    else:
-      abort(404)
+      else:
+        abort(404)
+
+    except:
+      abort(422)
 
   '''
   @TODO:
@@ -282,6 +299,7 @@ def create_app(test_config=None):
         # Recursive function
         return generate_random_question(category, previous_questions)
     else:
+      print(question)
       return {"question":question, "questions_per_play": len_of_questions}
 
   # Play the trivia game

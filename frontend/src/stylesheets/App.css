@@ -47,9 +47,15 @@ form {
   cursor: pointer;
 }
 
+.categories-list > h2 {
+  cursor: pointer;
+}
+
+
 .categories-list > ul > li {
   cursor: pointer;
 }
+
 
 .rating{
   width: 12%;

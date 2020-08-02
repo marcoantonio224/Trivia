@@ -40,9 +40,34 @@ class QuestionView extends Component {
       }
     })
   }
-
+  getCategorizedQuestions = (currentCategory) => {
+    $.ajax({
+      url: `/categories/${currentCategory}/questions?page=${this.state.page}`, //TODO: update request URL
+      type: "GET",
+      success: (result) => {
+        console.log(result)
+        this.setState({
+          questions: result.questions,
+          totalQuestions: result.total_questions,
+          categories: result.categories,
+          currentCategory: result.current_category })
+        return;
+      },
+      error: (error) => {
+        alert('Unable to load questions. Please try your request again')
+        return;
+      }
+    })
+  }
   selectPage(num) {
-    this.setState({page: num}, () => this.getQuestions());
+    const {currentCategory} = this.state;
+    if(currentCategory !== null){
+      // Do pagination questions filtered by categories
+      this.setState({page: num}, () => this.getCategorizedQuestions(currentCategory));
+    } else {
+      // Do pagination with all questions
+      this.setState({page: num}, () => this.getQuestions());
+    }
   }
 
   createPagination(){
@@ -127,14 +152,15 @@ class QuestionView extends Component {
   }
 
   render() {
-    const {query} = this.state;
+    const {query, currentCategory} = this.state;
+    console.log(currentCategory)
     return (
       <div className="question-view">
         <div className="categories-list">
           <h2 onClick={() => {this.getQuestions()}}>Categories</h2>
           <ul>
             {Object.keys(this.state.categories).map((id, ) => (
-              <li key={id} onClick={() => {this.getByCategory(this.state.categories[id])}}>
+              <li key={id} onClick={() => {this.getByCategory(id)}}>
                 {this.state.categories[id]}
                 <img className="category" src={`${this.state.categories[id]}.svg`}/>
               </li>
