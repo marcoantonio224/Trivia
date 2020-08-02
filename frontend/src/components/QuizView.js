@@ -45,6 +45,7 @@ class QuizView extends Component {
   getNextQuestion = () => {
     const previousQuestions = [...this.state.previousQuestions]
     if(this.state.currentQuestion.id) { previousQuestions.push(this.state.currentQuestion.id) }
+
     $.ajax({
       url: '/quizzes', //TODO: update request URL
       type: "POST",
@@ -70,6 +71,7 @@ class QuizView extends Component {
         return;
       },
       error: (error) => {
+        console.log(error)
         alert('Unable to load question. Please try your request again')
         return;
       }

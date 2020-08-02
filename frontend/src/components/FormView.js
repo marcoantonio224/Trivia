@@ -67,7 +67,7 @@ class FormView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to add question. There can be no empty fields.');
+        alert('Unable to add question. There can be no empty fields or any special characters.');
         return;
       }
     })

@@ -1,4 +1,5 @@
 import os
+import re
 from sqlalchemy import Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -59,8 +60,15 @@ class Question(db.Model):
 
   @validates('question','answer')
   def validate_question(self, keys, values):
+    # Create a regular expression to search for special characters
+    specialChars = re.compile('[@_!#$%^&*()<>/\|}{~:]')
+    # Check to see if values are empty
     if values == '':
       raise AssertionError('Cannot contain empty fields')
+    # Then validate to see if the string contains any special characters
+    elif specialChars.search(values) is not None:
+      raise AssertionError('Cannot contain special characters')
+
     return values
 
 

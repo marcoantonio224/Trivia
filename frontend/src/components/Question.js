@@ -61,10 +61,7 @@ class Question extends Component {
       },
       crossDomain: true,
       success: (result) => {
-        this.setState({
-          // rating:res,
-          // questionId:''
-        })
+          console.log(result)
       }
     });
   }
