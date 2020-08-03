@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Question, Category
 
-
 def create_app(test_config=None):
   # create and configure the app
   app = Flask(__name__)
@@ -197,7 +196,6 @@ def create_app(test_config=None):
         })
       # If not a search request
       else:
-        print(category)
         # Create a new question instance
         question = Question(question=question, answer=answer,category=category, difficulty=difficulty)
         # Save question
@@ -238,7 +236,6 @@ def create_app(test_config=None):
         abort(422)
       #Grab all questions according to category and keep order by id
       questions = Question.query.filter(Question.category == category_int).order_by(Question.id).all()
-      print(questions)
       # If questions are not empty
       if questions != []:
         # Grab all the categories from database and serialize them
@@ -299,7 +296,6 @@ def create_app(test_config=None):
         # Recursive function
         return generate_random_question(category, previous_questions)
     else:
-      print(question)
       return {"question":question, "questions_per_play": len_of_questions}
 
   # Play the trivia game

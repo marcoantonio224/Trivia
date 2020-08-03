@@ -27,9 +27,10 @@ class TriviaTestCase(unittest.TestCase):
         self.new_question_success= {
             'question':'In what state was Barack Obama born in?',
             'answer':'Hawaii',
-            'category':'History',
+            'category': 4,
             'difficulty': 2
         }
+
         # Test new question failure
         self.new_question_fail = {
             'quote':'Come with me if you want to live',
@@ -39,7 +40,7 @@ class TriviaTestCase(unittest.TestCase):
 
         # Test search query success
         self.search_query = {
-            "searchTerm": "president"
+            "searchTerm": "title"
         }
 
         # Test search query failure
@@ -114,7 +115,7 @@ class TriviaTestCase(unittest.TestCase):
 
     # Success
     def test_delete_question_success(self):
-        response = self.client().delete('/questions/49')
+        response = self.client().delete('/questions/26')
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
@@ -212,7 +213,7 @@ class TriviaTestCase(unittest.TestCase):
     #======================================================
     #======================================================
 
-    #========= POST /quizzes ===========
+    #========= POST /quizzes ===============================
     #========================================================
     # Success
     def test_play_quiz_success(self):
@@ -242,12 +243,12 @@ class TriviaTestCase(unittest.TestCase):
     # Success
     def test_question_update_rating_success(self):
         # Test a category in the database. In this case it's Science
-        response = self.client().patch('/questions/0', json=self.rating)
+        response = self.client().patch('/questions/5', json=self.rating)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['id'], 0)
+        self.assertEqual(data['id'], 5)
 
     # Failure
     def test_question_update_rating_failure(self):

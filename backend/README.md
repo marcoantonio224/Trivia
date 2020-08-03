@@ -197,8 +197,11 @@
     "success": true
   }
 ## TEST API
-  How to run unit test in python flask on command line.
-  INPUT: `pyhton test_flaskr.py`
+  In order to test this application, create a database specifically for testing and install data in it. Make sure you are in the appropriate folder of these files. You can accomplish this by typing the following in the terminal:
+  1.  `dropdb trivia_test`
+  2. `createdb trivia_test`
+  3. `psql trivia_test < trivia.psql`
+  4. `python test_flaskr.py`
 
 ## DEPLOYMENT
   `N/A`
