@@ -197,6 +197,7 @@ def create_app(test_config=None):
         })
       # If not a search request
       else:
+        print(category)
         # Create a new question instance
         question = Question(question=question, answer=answer,category=category, difficulty=difficulty)
         # Save question
@@ -235,8 +236,6 @@ def create_app(test_config=None):
 
       if type(category_int) is not int:
         abort(422)
-      # Grab the category according to index
-      category_object = categories[category_int]
       #Grab all questions according to category and keep order by id
       questions = Question.query.filter(Question.category == category_int).order_by(Question.id).all()
       print(questions)
@@ -278,8 +277,8 @@ def create_app(test_config=None):
   # A helper function to genereate a random question for the user to answer
   def generate_random_question(category, previous_questions):
     # Get the questions out of category
-    questions = Question.query.filter(Question.category == category['type']).all()
-
+    category_int = int(category['id']) + 1
+    questions = Question.query.filter(Question.category == category_int).all()
     # If questions are empty, then initiate the "all" category (all questions)
     if questions == []:
       questions = Question.query.all()
