@@ -63,7 +63,8 @@ CREATE TABLE public.questions (
     question text,
     answer text,
     difficulty integer,
-    category integer
+    category integer,
+    rating integer default 0
 );
 
 

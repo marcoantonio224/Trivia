@@ -33,7 +33,6 @@ class Category(db.Model):
 
   id = Column(Integer, primary_key=True)
   type = Column(String, nullable=False, unique=True)
-  question = db.relationship('Question', backref='parent_category', cascade='all, delete-orphan',  lazy=True)
 
   def __init__(self, type):
     self.type = type
@@ -56,7 +55,7 @@ class Question(db.Model):
   answer = Column(String, nullable=False)
   difficulty = Column(Integer, nullable=False)
   rating = Column(Integer, nullable=False, default=0)
-  category = Column(String, db.ForeignKey('categories.type'))
+  category = Column(String, nullable=False)
 
   @validates('question','answer')
   def validate_question(self, keys, values):

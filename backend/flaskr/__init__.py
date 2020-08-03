@@ -231,14 +231,15 @@ def create_app(test_config=None):
       # Get questions according to categories provided in the url
       categories = Category.query.order_by(Category.id).all()
 
-      category_int = int(category)
+      category_int = int(category) + 1
 
       if type(category_int) is not int:
         abort(422)
       # Grab the category according to index
       category_object = categories[category_int]
       #Grab all questions according to category and keep order by id
-      questions = Question.query.filter(Question.category == category_object.type).order_by(Question.id).all()
+      questions = Question.query.filter(Question.category == category_int).order_by(Question.id).all()
+      print(questions)
       # If questions are not empty
       if questions != []:
         # Grab all the categories from database and serialize them

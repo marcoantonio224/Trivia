@@ -86,6 +86,7 @@ class Question extends Component {
 
   render() {
     const { id, question, answer, category, difficulty, rating} = this.props;
+    console.log(this.state)
 
     return (
       <div className="Question-holder">
