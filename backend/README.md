@@ -58,8 +58,8 @@
   - Fetch a list of questions in a paginated format. They are a total of 10 questions each page.
   - Request Arguments: None
   - Returns dictionaries and a response list of categories and questions.
-    INPUT: `curl http://127.0.0.1:3000/questions`
-    OUTPUT:
+  - INPUT: `curl http://127.0.0.1:3000/questions`
+  - OUTPUT:
     {
       "categories": [
         "Science",
@@ -90,8 +90,8 @@
   - Fetches a list of categories.
   - Request Arguments: None
   - Returns a dictionary of a response list of categories
-    INPUT: `curl http://127.0.0.1:3000/categories`
-    OUTPUT:
+  - INPUT: `curl http://127.0.0.1:3000/categories`
+  - OUTPUT:
       {
         "categories": [
           "Science",
@@ -108,7 +108,8 @@
   - Update a question by inserting a rating
   - Request Argument: <int:question_id> (question's id)
   - Returns a response of the id and success
-    INPUT: `curl http://127.0.0.1:3000/questions/5 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'`
+  - INPUT: `curl http://127.0.0.1:3000/questions/5 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'`
+  - Output:
     {
       "id": 5,
       "success": true
@@ -118,7 +119,8 @@
   - Delete a question by id
   - Request Arguments: <int:question_id> (question's id)
   - Returns a response of the id and success
-    INPUT: `curl http://127.0.0.1:3000/questions/19 -X DELETE`
+  - INPUT: `curl http://127.0.0.1:3000/questions/19 -X DELETE`
+  - OUTPUT:
     {
       "deleted": 19,
       "success": true
@@ -128,8 +130,8 @@
   - Add a question
   - Request Arguments: None
   - Returns a response of a list of questions
-    INPUT: `curl http://127.0.0.1:3000/questions -X POST -H "Content-Type: application/json" -d '{"question":"In what state was Barack Obama born in?", "answer":"Hawaii", "category": 4, "difficulty": 2}'`
-    OUTPUT:
+  - INPUT: `curl http://127.0.0.1:3000/questions -X POST -H "Content-Type: application/json" -d '{"question":"In what state was Barack Obama born in?", "answer":"Hawaii", "category": 4, "difficulty": 2}'`
+  - OUTPUT:
     {
       "created": 51,
       "questions": [
@@ -152,8 +154,8 @@
   - Fetches questions according to category
   - Request Arguments: <category>
   - Returns a list of questions according to category
-    INPUT: `curl http://127.0.0.1:3000/categories/1/questions`
-    OUTPUT:
+  - INPUT: `curl http://127.0.0.1:3000/categories/1/questions`
+  - OUTPUT:
     {
       "categories": [
         "Science",
@@ -182,8 +184,8 @@
   - Call Quiz to start and play trivia
   - Request Arguments: None
   - Returns an object of a random question
-    INPUT: `curl http://127.0.0.1:3000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [], "quiz_category": {"type": "Art", "id": "1"}}'`
-  OUTPUT:
+  - INPUT: `curl http://127.0.0.1:3000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [], "quiz_category": {"type": "Art", "id": "1"}}'`
+  - OUTPUT:
   {
     "question": {
       "answer": "Jackson Pollock",
