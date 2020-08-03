@@ -27,6 +27,14 @@
     Command:
     `pip install -r requirements.txt`
 
+  ### DATABASE SETUP
+    In order to install data in this trivia application, please make sure
+    PostgreSQL is running and has created a trivia database on your local
+    machine. Then from the terminal of the parent folder of `trivia.psql`,
+    type the following command in the terminal:
+    `psql trivia < trivia.psql`
+
+
   ### DATABASE ACCESS
     In order to access the database, you must have
     Postgres up and running. From the backend folder, in the command line type:
@@ -47,29 +55,31 @@
 
 ## API ENDPOINTS
   GET `/questions`
-  - Return a list of categories in a paginated format. They are a total of 10.
+  - Fetch a list of questions in a paginated format. They are a total of 10 questions each page.
+  - Request Arguments: None
+  - Returns dictionaries and a response list of categories and questions.
     INPUT: `curl http://127.0.0.1:3000/questions`
     OUTPUT:
-      {
-        "categories": [
-          "Science",
-          "Art",
-          "Geography",
-          "History",
-          "Entertainment",
-          "Sports"
-        ],
-        "currentCategory": "not provided",
-        "questions": [
-          {
-            "answer": "Oxygen",
-            "category": "Science",
-            "difficulty": 4,
-            "id": 24,
-            "question": "What element did Joseph Priestley discover in 1774?",
-            "rating": 4
-          },
-          ( ......... 9 More Questions )
+    {
+      "categories": [
+        "Science",
+        "Art",
+        "Geography",
+        "History",
+        "Entertainment",
+        "Sports"
+      ],
+      "current_category": null,
+      "questions": [
+        {
+          "answer": "Apollo 13",
+          "category": 5,
+          "difficulty": 4,
+          "id": 2,
+          "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?",
+          "rating": 4
+        },
+        ( ......... 9 More Questions )
         ],
         "success": true,
         "total_questions": 13
@@ -77,7 +87,9 @@
 
 
   GET  `/categories`
-  - Return a list of categories.
+  - Fetches a list of categories.
+  - Request Arguments: None
+  - Returns a dictionary of a response list of categories
     INPUT: `curl http://127.0.0.1:3000/categories`
     OUTPUT:
       {
@@ -94,46 +106,36 @@
 
   PATCH `/questions/<int:question_id>`
   - Update a question by inserting a rating
-    INPUT: `curl http://127.0.0.1:3000/questions/25 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'`
+  - Request Argument: <int:question_id> (question's id)
+  - Returns a response of the id and success
+    INPUT: `curl http://127.0.0.1:3000/questions/5 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'`
     {
-      "id": 25,
+      "id": 5,
       "success": true
     }
 
-  GET `/categories`
-  - Return a list of categories.
-    INPUT: `curl http://127.0.0.1:3000/categories`
-    OUTPUT:
-      {
-        "categories": [
-          "Science",
-          "Art",
-          "Geography",
-          "History",
-          "Entertainment",
-          "Sports"
-        ],
-        "success": true
-      }
-
   DELETE `/questions/<int:question_id>`
   - Delete a question by id
-    INPUT: `curl http://127.0.0.1:3000/questions/25 -X DELETE`
+  - Request Arguments: <int:question_id> (question's id)
+  - Returns a response of the id and success
+    INPUT: `curl http://127.0.0.1:3000/questions/19 -X DELETE`
     {
-      "deleted": 25,
+      "deleted": 19,
       "success": true
     }
 
   POST `/questions`
   - Add a question
-    INPUT: `curl http://127.0.0.1:3000/questions/25 -X POST -H "Content-Type: application/json" -d '{"question":"In what state was Barack Obama born in?", "answer":"Hawaii", "category":"History", "difficulty": 2}'`
+  - Request Arguments: None
+  - Returns a response of a list of questions
+    INPUT: `curl http://127.0.0.1:3000/questions -X POST -H "Content-Type: application/json" -d '{"question":"In what state was Barack Obama born in?", "answer":"Hawaii", "category": 4, "difficulty": 2}'`
     OUTPUT:
     {
       "created": 51,
       "questions": [
         {
           "answer": "Hawaii",
-          "category": "History",
+          "category": 4,
           "difficulty": 2,
           "id": 51,
           "question": "In what state was Barack Obama born in?",
@@ -147,49 +149,53 @@
 
 
   GET `/categories/<category>/questions`
-  - Grab questions according to category
-    INPUT: `curl http://127.0.0.1:3000/categories/Science/questions`
+  - Fetches questions according to category
+  - Request Arguments: <category>
+  - Returns a list of questions according to category
+    INPUT: `curl http://127.0.0.1:3000/categories/1/questions`
     OUTPUT:
     {
+      "categories": [
+        "Science",
+        "Art",
+        "Geography",
+        "History",
+        "Entertainment",
+        "Sports"
+      ],
+      "current_category": "1",
       "questions": [
         {
-          "answer": "Oxygen",
-          "category": "Science",
-          "difficulty": 4,
-          "id": 24,
-          "question": "What element did Joseph Priestley discover in 1774?",
-          "rating": 4
+          "answer": "Escher",
+          "category": 2,
+          "difficulty": 1,
+          "id": 16,
+          "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?",
+          "rating": 0
         },
-        {
-          "answer": "Copper and Tin",
-          "category": "Science",
-          "difficulty": 3,
-          "id": 26,
-          "question": "Bronze is an alloy consisting primarily of what two elements?",
-          "rating": 1
-        }
+        (... 3 other Art questions)
       ],
       "success": true,
-      "total_questions": 2
-  }
-
+      "total_questions": 4
+    }
   POST `/quizzes`
-  - Call Quiz to start and play trivia.
+  - Call Quiz to start and play trivia
+  - Request Arguments: None
+  - Returns an object of a random question
     INPUT: `curl http://127.0.0.1:3000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions": [], "quiz_category": {"type": "Art", "id": "1"}}'`
   OUTPUT:
   {
     "question": {
-      "answer": "Michelangelo",
-      "category": "Art",
-      "difficulty": 3,
-      "id": 29,
-      "question": "Who painted the Sistine Chapel's ceiling?",
+      "answer": "Jackson Pollock",
+      "category": 2,
+      "difficulty": 2,
+      "id": 19,
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?",
       "rating": 0
     },
-    "questions_per_play": 3,
+    "questions_per_play": 4,
     "success": true
-}
-
+  }
 ## TEST API
   How to run unit test in python flask on command line.
   INPUT: `pyhton test_flaskr.py`
